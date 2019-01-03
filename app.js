@@ -3,6 +3,8 @@ const json = require('koa-json');
 const KoaRouter = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const mongoose = require('mongoose');
+const passport = require('koa-passport')
+
 const app = new Koa();
 const router = new KoaRouter();
 app.use(bodyParser());
@@ -28,6 +30,7 @@ mongoose.connect(dbMongoURI, {
 // 引入routes/api/users.js
 const users = require('./routes/api/users');
 
+//localhost:3000/about   得到 get about
 router.get('/about', (ctx, next) => {
     // ctx.router available
     ctx.body = 'get about';
@@ -42,6 +45,12 @@ async function funBodyParser(ctx) {
 
     console.log(body);
 }
+
+// passport 使用必须加上的初始化代码
+app.use(passport.initialize())
+app.use(passport.session())
+// 回调到config文件中 passport.js
+require('./config/passport')(passport);
 
 // 配置路由地址 localhost:3000/api/users  找routes/api/users.js文件
 router.use('/api/users', users);
