@@ -31,7 +31,39 @@ router.get(
     }),
     async ctx => {
         console.log(ctx.state);
-        const pri
+        // const pri
+    }
+);
+
+
+/**
+ * @route POST api/profile
+ * @desc  添加和编辑个人信息接口地址
+ * @access 接口是私有的
+ */
+router.post(
+    '/',
+    passport.authenticate('jwt', { // 在app.js中,有跳转到config/passport.js中,鉴权解析
+        session: false
+    }),
+    async ctx => {
+        console.log(ctx.state); // 通过token能够,在通过passport.js得到用户登录信息表,打印,user.id等
+        const profileFiedls = {};
+        // console.log(ctx.state.user._id);
+        
+        profileFiedls.user = ctx.state.user._id;
+        profileFiedls.company = ctx.request.body.company;
+        console.log(profileFiedls);
+        // 保存到数据库中
+        const profileSave = new Profile(profileFiedls);
+        await profileSave
+            .save()
+            .then(profileInDB => {
+                ctx.body = profileInDB;
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 );
 
