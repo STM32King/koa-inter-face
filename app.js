@@ -29,6 +29,8 @@ mongoose.connect(dbMongoURI, {
 
 // 引入routes/api/users.js
 const users = require('./routes/api/users');
+// 引入routes/api/profile.js
+const profile = require('./routes/api/profile');
 
 //localhost:3000/about   得到 get about
 router.get('/about', (ctx, next) => {
@@ -54,6 +56,8 @@ require('./config/passport')(passport);
 
 // 配置路由地址 localhost:3000/api/users  找routes/api/users.js文件
 router.use('/api/users', users);
+// 配置路由地址 localhost:3000/api/profile  找routes/api/profile.js文件
+router.use('/api/profile', profile);
 
 app.use(router.routes()).use(router.allowedMethods());
 

@@ -23,6 +23,7 @@ module.exports = passport => {
               } else {
                 return done(null, false);
               }
+
         })
     );
 };

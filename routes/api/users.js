@@ -61,7 +61,7 @@ router.post('/register', async (ctx) => {
         const newUser = new User({
             name: ctx.request.body.name,
             email: ctx.request.body.email,
-            password: tools.enbcrypt(ctx.request.body.password)
+            password: tools.enbcrypt(ctx.request.body.password) // 密码加密
         });
 
         console.log("const newUser = ", newUser);
@@ -87,14 +87,14 @@ router.post('/register', async (ctx) => {
  * @access 接口是公开的
  */
 router.post('/login', async ctx => {
-    // const { errors, isValid } = validateLoginInput(ctx.request.body);
-
-    // // 判断是否验证通过
-    // if (!isValid) {
-    //   ctx.status = 400;
-    //   ctx.body = errors;
-    //   return;
-    // }
+    // 验证
+    const { errors, isValid } = validateLoginInput(ctx.request.body);
+    // 判断是否验证通过
+    if (!isValid) {
+      ctx.status = 400;
+      ctx.body = errors;
+      return;
+    }
 
     // 查询,通过邮箱查询数据库
     const findResult = await User.find({
@@ -158,7 +158,7 @@ router.get(
             id: ctx.state.user.id,
             name: ctx.state.user.name,
             email: ctx.state.user.email,
-            avatar: ctx.state.user.avatar
+            // avatar: ctx.state.user.avatar
         };
     }
 );
