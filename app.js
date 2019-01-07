@@ -4,11 +4,17 @@ const KoaRouter = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const mongoose = require('mongoose');
 const passport = require('koa-passport')
+const {
+    accessLogger,
+    systemLogger
+} = require('./log/logger');
 
 const app = new Koa();
 const router = new KoaRouter();
 app.use(bodyParser());
 app.use(json());
+app.use(accessLogger()); //中间件
+app.on('error', err => {logger.error(err); });
 
 // app.use(async ctx => {
 //   ctx.body = {msg: "Hello Koa"};
