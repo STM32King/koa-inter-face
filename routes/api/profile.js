@@ -48,14 +48,21 @@ router.post(
     }),
     async ctx => {
         console.log(ctx.state); // 通过token能够,在通过passport.js得到用户登录信息表,打印,user.id等
-        const profileFiedls = {};
+        const profileFields = {};
         // console.log(ctx.state.user._id);
-        
-        profileFiedls.user = ctx.state.user._id;
-        profileFiedls.company = ctx.request.body.company;
-        console.log(profileFiedls);
+        // 通过passport.js得到user._id,保存到profile表中
+        profileFields.usersTabID = ctx.state.user._id;
+        // 用户输入的company,保存到profile表中
+        if (ctx.request.body.company) {
+            profileFields.company = ctx.request.body.company;
+        }
+        // 用户输入的skills,保存到profile表中 数组
+        if (typeof ctx.request.body.skills !== 'undefined') {
+            profileFields.skills = ctx.request.body.skills.split(',');
+          }
+        console.log(profileFields);
         // 保存到数据库中
-        const profileSave = new Profile(profileFiedls);
+        const profileSave = new Profile(profileFields);
         await profileSave
             .save()
             .then(profileInDB => {
@@ -64,6 +71,31 @@ router.post(
             .catch(err => {
                 console.log(err);
             });
+    }
+);
+
+
+/**
+ * @route DELETE api/profile/del
+ * @desc  删除个人信息接口地址
+ * @access 接口是共有的
+ */
+router.delete(
+    '/del',
+    passport.authenticate('jwt', { // 在app.js中,有跳转到config/passport.js中,鉴权解析
+        session: false
+    }),
+    async ctx => {
+        console.log(ctx.state); // 通过token能够,在通过passport.js得到用户登录信息表,打印,user.id等
+        const usersTabID = ctx.state.user._id;
+        await Profile.findOneAndRemove({usersTabID:usersTabID},(err, docs)=>{
+          if (err) {
+              return err;
+          }  
+          console.log(docs);
+          ctx.body = docs;
+
+        })
     }
 );
 

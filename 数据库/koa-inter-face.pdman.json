@@ -102,7 +102,7 @@
               "notNull": true
             },
             {
-              "name": "user",
+              "name": "usersTabID",
               "type": "MiddleString",
               "remark": "",
               "chnname": "用户登录表_id",
@@ -218,41 +218,9 @@
             "id": "344f0a03"
           }
         ],
-        "edges": [
-          {
-            "shape": "erdRelation",
-            "relation": "0,n:1",
-            "source": "7c0bb93e",
-            "target": "344f0a03",
-            "id": "3ce4d522",
-            "controlPoints": [
-              {
-                "x": 459.4287109375,
-                "y": 183.75721153846155
-              },
-              {
-                "x": 585.6474609375,
-                "y": 192.30263157894737
-              }
-            ],
-            "sourceAnchor": 1,
-            "targetAnchor": 2
-          }
-        ]
+        "edges": []
       },
-      "associations": [
-        {
-          "relation": "0,n:1",
-          "from": {
-            "entity": "users",
-            "field": "_id"
-          },
-          "to": {
-            "entity": "profiles",
-            "field": "user"
-          }
-        }
-      ]
+      "associations": []
     }
   ],
   "dataTypeDomains": {
