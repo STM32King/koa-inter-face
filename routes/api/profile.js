@@ -3,6 +3,8 @@ const router = new KoaRouter();
 const passport = require('koa-passport')
 // 引入Profile
 const Profile = require("../../models/Profile");
+// ProfileIDAdd
+const counters = require("../../models/ProfileIDAdd.js");
 
 /**
  *@route     GET api/users/test
@@ -59,7 +61,7 @@ router.post(
         // 用户输入的skills,保存到profile表中 数组
         if (typeof ctx.request.body.skills !== 'undefined') {
             profileFields.skills = ctx.request.body.skills.split(',');
-          }
+        }
         console.log(profileFields);
         // 保存到数据库中
         const profileSave = new Profile(profileFields);
@@ -88,16 +90,45 @@ router.delete(
     async ctx => {
         console.log(ctx.state); // 通过token能够,在通过passport.js得到用户登录信息表,打印,user.id等
         const usersTabID = ctx.state.user._id;
-        await Profile.findOneAndRemove({usersTabID:usersTabID},(err, docs)=>{
-          if (err) {
-              return err;
-          }  
-          console.log(docs);
-          ctx.body = docs;
+        await Profile.findOneAndRemove({
+            usersTabID: usersTabID
+        }, (err, docs) => {
+            if (err) {
+                return err;
+            }
+            console.log(docs);
+            ctx.body = docs;
 
         })
     }
 );
+
+
+/**
+ * @route get api/profile/count
+ * @desc  获取人信息个数的接口地址
+ * @access 接口是共有的
+ */
+router.get(
+    '/count',
+    passport.authenticate('jwt', { // 在app.js中,有跳转到config/passport.js中,鉴权解析
+        session: false
+    }),
+    async ctx => {
+        // console.log(ctx.state); // 通过token能够,在通过passport.js得到用户登录信息表,打印,user.id等
+        const usersTabID = ctx.state.user._id;
+        await Profile.countDocuments({}, (err, docs) => {
+            if (err) {
+                return err;
+            }
+            console.log(docs);
+            ctx.body = {
+                msg: docs
+            };
+        })
+    }
+);
+
 
 
 module.exports = router.routes();
